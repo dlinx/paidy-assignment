@@ -3,6 +3,8 @@ import { CurrencyCard } from './components/CurrencyCard';
 import { usePriceTick } from './services/usePriceTick';
 import { Container, Paper, styled } from '@material-ui/core';
 import { ForexGraph } from './components';
+import { PRESET_CURRENCY, PRESET_FOREX_LIST } from './constants/userPreset';
+import { UserForexList } from './components/UserForexList';
 
 const AppContainer = styled('div')({
   position: 'fixed',
@@ -16,21 +18,23 @@ const PageContainer = styled(Container)({
   height: '100%',
   display: 'flex'
 });
-const CurrenciesContainer = styled('div')({
-  maxWidth: '300px'
-});
 
 const App = () => {
-  const { forexTick, setCurrencyPairs } = usePriceTick();
+  const { forexData, setCurrencyPairs } = usePriceTick();
+  const [userCurrency, setUserCurrency] = useState(PRESET_CURRENCY)
+  const [userForexList, setUserForexList] = useState(PRESET_FOREX_LIST)
+
   useEffect(() => {
     setCurrencyPairs(['USDJPY'])
-  }, [])
+  }, []);
+
   return (
     <AppContainer >
       <PageContainer maxWidth="md">
-        <CurrenciesContainer>
-        </CurrenciesContainer>
         <ForexGraph />
+        <UserForexList
+          userForexList={userForexList}
+          forexData={forexData} />
       </PageContainer>
     </AppContainer>
   );

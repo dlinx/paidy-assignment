@@ -1,4 +1,4 @@
-export enum CURRENCIES {
+export enum CURRENCY {
     AED = "AED",  //	United Arab Emirates Dirham
     AFN = "AFN",  //	Afghanistan Afghani
     ALL = "ALL",  //	Albania Lek

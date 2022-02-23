@@ -1,7 +1,8 @@
-import { styled } from "@material-ui/core"
+import { Paper, styled } from "@material-ui/core"
 
-const GraphContainer = styled('div')({
-
+const GraphContainer = styled(Paper)({
+  marginRight: '5px',
+  backgroundColor: '#3b8cff'
 })
 export const ForexGraph = () => {
   return <GraphContainer>

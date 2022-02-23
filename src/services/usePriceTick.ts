@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
+import { CURRENCY } from "../constants/currency";
 
 export interface ForexTick {
-  from: "USD",
-  to: "JPY",
+  from: CURRENCY,
+  to: CURRENCY,
   bid: number,
   ask: number,
   price: number,
@@ -10,13 +11,27 @@ export interface ForexTick {
 }
 export const usePriceTick = () => {
   const [forexTick, setForexTick] = useState<ForexTick[]>();
-  const [currencyPairs, setCurrencyPairs] = useState<string[]>([])
+  const [currencyPairs, setCurrencyPairs] = useState<string[]>([]);
+  const [forexData, setForexData] = useState<{ [key: string]: ForexTick[] }>({});
+
+  const addToForexData = (forexTick: ForexTick[]) => {
+    setForexData(fData => {
+      const _fData = { ...fData }
+      forexTick.forEach(ft => {
+        const ticks = _fData[`${ft.to}_${ft.from}`] ?? [];
+        ticks.push(ft);
+        _fData[`${ft.to}_${ft.from}`] = ticks;
+      });
+      return _fData;
+    });
+  }
+
   useEffect(() => {
     if (currencyPairs.length === 0) return;
     const controller = new AbortController();
     const signal = controller.signal;
 
-    fetch('http://localhost:8080/streaming/rates?pair=USDJPY', {
+    fetch('http://localhost:8080/streaming/rates?pair=JPYUSD&pair=JPYINR', {
       headers: {
         token: '10dc303535874aeccc86a8251e6992f5'
       },
@@ -34,7 +49,7 @@ export const usePriceTick = () => {
                   if (value) {
                     const jsonStr = new TextDecoder().decode(value);
                     const jsonData = JSON.parse(jsonStr);
-                    setForexTick(jsonData);
+                    addToForexData(jsonData);
                   }
                   if (done) {
                     controller.close();
@@ -53,7 +68,7 @@ export const usePriceTick = () => {
   }, [currencyPairs]);
 
   return {
-    forexTick,
+    forexData,
     setCurrencyPairs
   }
 }
