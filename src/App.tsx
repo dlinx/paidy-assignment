@@ -1,25 +1,38 @@
-import React, { useEffect } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from 'react';
+import { CurrencyCard } from './components/CurrencyCard';
+import { usePriceTick } from './services/usePriceTick';
+import { Container, Paper, styled } from '@material-ui/core';
+import { ForexGraph } from './components';
 
-function App() {
+const AppContainer = styled('div')({
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  bottom: 0,
+  right: 0,
+  margin: '20px 0'
+})
+const PageContainer = styled(Container)({
+  height: '100%',
+  display: 'flex'
+});
+const CurrenciesContainer = styled('div')({
+  maxWidth: '300px'
+});
+
+const App = () => {
+  const { forexTick, setCurrencyPairs } = usePriceTick();
+  useEffect(() => {
+    setCurrencyPairs(['USDJPY'])
+  }, [])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppContainer >
+      <PageContainer maxWidth="md">
+        <CurrenciesContainer>
+        </CurrenciesContainer>
+        <ForexGraph />
+      </PageContainer>
+    </AppContainer>
   );
 }
 
