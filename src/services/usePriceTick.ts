@@ -31,7 +31,7 @@ export const usePriceTick = () => {
     const controller = new AbortController();
     const signal = controller.signal;
 
-    fetch('http://localhost:8080/streaming/rates?pair=JPYUSD&pair=JPYINR', {
+    fetch('http://localhost:8080/streaming/rates?pair=JPYUSD&pair=JPYINR&pair=JPYGBP&pair=JPYCNY&pair=JPYEUR&pair=JPYNPR&pair=JPYHKD&pair=JPYKRW', {
       headers: {
         token: '10dc303535874aeccc86a8251e6992f5'
       },
