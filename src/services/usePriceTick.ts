@@ -63,8 +63,9 @@ export const usePriceTick = () => {
                     return null;
                   }
                   return readStream();
-                }).catch(e=>{
-                  setHasError(true)
+                }).catch(e => {
+                  if (e.name !== 'AbortError')
+                    setHasError(true)
                 });
             }
           }
