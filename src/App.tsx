@@ -23,18 +23,24 @@ const App = () => {
   const { forexData, setCurrencyPairs } = usePriceTick();
   const [userCurrency, setUserCurrency] = useState(PRESET_CURRENCY)
   const [userForexList, setUserForexList] = useState(PRESET_FOREX_LIST)
+  const [selectedCurrencyPair, setSelectedCurrencyPair] = useState('USD_JPY')
 
   useEffect(() => {
-    setCurrencyPairs(['USDJPY'])
+    setCurrencyPairs(['USDJPY']);
   }, []);
 
+  const onCardClick = (currencyPair: string) => {
+    setSelectedCurrencyPair(currencyPair)
+  }
   return (
     <AppContainer >
       <PageContainer maxWidth="md">
-        <ForexGraph />
+        <ForexGraph chartData={forexData[selectedCurrencyPair]} />
         <UserForexList
           userForexList={userForexList}
-          forexData={forexData} />
+          forexData={forexData}
+          onCardClick={(currencyPair) => onCardClick(currencyPair)}
+        />
       </PageContainer>
     </AppContainer>
   );

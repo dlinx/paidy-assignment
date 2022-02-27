@@ -23,11 +23,15 @@ type Props = {
   userForexList: ForexListItem[],
   forexData: {
     [currencyId: string]: ForexTick[]
-  }
+  },
+  onCardClick: (currency: string) => void
 }
 export const UserForexList: React.FC<Props> = (props) => {
   const [expandedIndex, setExpandedIndex] = useState(0);
-
+  const onCardClick = (currency: ForexTick[], i: number) => {
+    setExpandedIndex(i);
+    props.onCardClick(`${currency[0].to}_${currency[0].from}`)
+  }
   return <CurrenciesContainer>
     <ConfigWrapper square>
       <Autocomplete
@@ -48,7 +52,7 @@ export const UserForexList: React.FC<Props> = (props) => {
           <CurrencyCard
             key={currency[0].to}
             forexData={currency[currency.length - 1]}
-            onCardClick={() => setExpandedIndex(i)}
+            onCardClick={() => onCardClick(currency, i)}
             isExpanded={i === expandedIndex}
           />)}
     </CurrencyListContainer>

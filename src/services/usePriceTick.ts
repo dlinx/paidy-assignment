@@ -7,7 +7,7 @@ export interface ForexTick {
   bid: number,
   ask: number,
   price: number,
-  time_stamp: string
+  time_stamp: Date
 }
 export const usePriceTick = () => {
   const [forexTick, setForexTick] = useState<ForexTick[]>();
@@ -48,8 +48,10 @@ export const usePriceTick = () => {
                 .then(({ done, value }) => {
                   if (value) {
                     const jsonStr = new TextDecoder().decode(value);
-                    const jsonData = JSON.parse(jsonStr);
-                    addToForexData(jsonData);
+                    const jsonData = JSON.parse(jsonStr) as ForexTick[]
+                    const parsedData = jsonData
+                      .map(j => ({ ...j, time_stamp: new Date(j.time_stamp) }));
+                    addToForexData(parsedData);
                   }
                   if (done) {
                     controller.close();
