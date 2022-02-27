@@ -57,7 +57,7 @@ export const UserForexList: React.FC<Props> = (props) => {
         }}
         options={Object.keys(CURRENCY)}
         width='130px'
-        defaultValue={props.userCurrency}
+        value={props.userCurrency}
         label='Currency'
         disableClearable
       />
