@@ -63,6 +63,8 @@ export const usePriceTick = () => {
                     return null;
                   }
                   return readStream();
+                }).catch(e=>{
+                  setHasError(true)
                 });
             }
           }
