@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { API_SERVER, API_URL, AUTH_TOKEN } from "../constants/api";
 import { CURRENCY } from "../constants/currency";
 
 export interface ForexTick {
@@ -10,7 +11,6 @@ export interface ForexTick {
   time_stamp: Date
 }
 export const usePriceTick = () => {
-  const [forexTick, setForexTick] = useState<ForexTick[]>();
   const [currencyPairs, setCurrencyPairs] = useState<string[]>([]);
   const [forexData, setForexData] = useState<{ [key: string]: ForexTick[] }>({});
 
@@ -27,13 +27,14 @@ export const usePriceTick = () => {
   }
 
   useEffect(() => {
+    setForexData({})
     if (currencyPairs.length === 0) return;
     const controller = new AbortController();
     const signal = controller.signal;
-
-    fetch('http://localhost:8080/streaming/rates?pair=JPYUSD&pair=JPYINR&pair=JPYGBP&pair=JPYCNY&pair=JPYEUR&pair=JPYNPR&pair=JPYHKD&pair=JPYKRW', {
+    const params = currencyPairs.join('&pair=')
+    fetch(`${API_SERVER}${API_URL}?pair=${params}`, {
       headers: {
-        token: '10dc303535874aeccc86a8251e6992f5'
+        token: AUTH_TOKEN
       },
       signal
     }).then(res => {

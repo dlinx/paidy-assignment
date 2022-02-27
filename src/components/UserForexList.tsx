@@ -1,11 +1,11 @@
-import { Button, Card, styled, TextField } from "@material-ui/core";
-import { Autocomplete } from "@material-ui/lab";
+import { Card, styled, TextField } from "@material-ui/core";
 import { useState } from "react";
 import { CurrencyCard } from ".";
 import { CURRENCY } from "../constants/currency";
-import { ForexListItem } from "../constants/userPreset";
+import { ForexListItem, PRESET_CURRENCY } from "../constants/userPreset";
 import { ForexTick } from "../services/usePriceTick";
-import AddIcon from '@mui/icons-material/Add';
+import { AddCurrencyButton } from "./AddCurrencyButton";
+import { CurrencyAutoComplete } from "./CurrencyAutocomplete";
 
 const CurrenciesContainer = styled('div')({
   width: '400px',
@@ -20,34 +20,35 @@ const ConfigWrapper = styled(Card)({
   display: 'flex',
   padding: '5px'
 });
-const AddButtonContainer = styled('div')({
-  marginTop: '20px',
-  textAlign: 'center'
-})
+
 type Props = {
   userForexList: ForexListItem[],
   forexData: {
     [currencyId: string]: ForexTick[]
   },
   onCardClick: (currency: string) => void
+  onUserCurrencyChange: (currency: CURRENCY) => void
+  onAddTargetCurrency: (currency: CURRENCY) => void
+  addToUserForexList: (currency: CURRENCY) => void
 }
 export const UserForexList: React.FC<Props> = (props) => {
   const [expandedIndex, setExpandedIndex] = useState(0);
+
   const onCardClick = (currency: ForexTick[], i: number) => {
     setExpandedIndex(i);
     props.onCardClick(`${currency[0].to}_${currency[0].from}`)
   }
+
   return <CurrenciesContainer>
     <ConfigWrapper square>
-      <Autocomplete
-        id="combo-box-demo"
+      <CurrencyAutoComplete
+        onUserCurrencyChange={(currency) => {
+          props.onUserCurrencyChange(currency as CURRENCY)
+        }}
         options={Object.keys(CURRENCY)}
-        getOptionLabel={(option) => option}
-        style={{ width: '130px' }}
-        renderInput={(params) =>
-          <TextField {...params} label="Currency" />}
-        defaultValue='JPY'
-        disableClearable
+        width='130px'
+        defaultValue={PRESET_CURRENCY}
+        label='Currency'
       />
       <TextField label="Amount" value={1} />
     </ConfigWrapper>
@@ -60,9 +61,10 @@ export const UserForexList: React.FC<Props> = (props) => {
             onCardClick={() => onCardClick(currency, i)}
             isExpanded={i === expandedIndex}
           />)}
-      <AddButtonContainer>
-        <Button variant="text" color="primary" size="large" startIcon={<AddIcon />}>Add Currency</Button>
-      </AddButtonContainer>
+      <AddCurrencyButton
+        onCurrencySelected={(currency) => props.addToUserForexList(currency)}
+        userForexList={props.userForexList}
+      />
     </CurrencyListContainer>
   </CurrenciesContainer>
 }

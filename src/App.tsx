@@ -3,8 +3,9 @@ import { CurrencyCard } from './components/CurrencyCard';
 import { usePriceTick } from './services/usePriceTick';
 import { Button, Container, Paper, styled, useMediaQuery, useTheme } from '@material-ui/core';
 import { ForexGraph } from './components';
-import { PRESET_CURRENCY, PRESET_FOREX_LIST } from './constants/userPreset';
+import { ForexListItem, PRESET_CURRENCY, PRESET_FOREX_LIST } from './constants/userPreset';
 import { UserForexList } from './components/UserForexList';
+import { CURRENCY } from './constants/currency';
 
 const AppContainer = styled('div')({
   position: 'fixed',
@@ -22,17 +23,38 @@ const PageContainer = styled(Container)({
 const App = () => {
   const { forexData, setCurrencyPairs } = usePriceTick();
   const [userCurrency, setUserCurrency] = useState(PRESET_CURRENCY)
-  const [userForexList, setUserForexList] = useState(PRESET_FOREX_LIST)
-  const [selectedCurrencyPair, setSelectedCurrencyPair] = useState('USD_JPY')
+  const [userForexList, setUserForexList] = useState<ForexListItem[]>([])
+  const [selectedCurrencyPair, setSelectedCurrencyPair] = useState(`${PRESET_FOREX_LIST[0]}_${PRESET_CURRENCY}`)
   const theme = useTheme();
   const isNotMobile = useMediaQuery(theme.breakpoints.up('sm'));
 
   useEffect(() => {
-    setCurrencyPairs(['USDJPY']);
-  }, []);
+    const currencyPairs: string[] = userForexList.map(({to,from})=>`${from}${to}`)
+    setCurrencyPairs(currencyPairs);
+  }, [userForexList])
+
+  useEffect(() => {
+    const ufx: ForexListItem[] = [];
+    PRESET_FOREX_LIST.forEach(currency => {
+      ufx.push({
+        from: userCurrency,
+        to: currency
+      });
+    });
+    setUserForexList(ufx)
+    setSelectedCurrencyPair(`${ufx[0].to}_${ufx[0].from}`)
+  }, [userCurrency]);
 
   const onCardClick = (currencyPair: string) => {
     setSelectedCurrencyPair(currencyPair)
+  }
+  const addToUserForexList = (currency: CURRENCY) => {
+    setUserForexList(list => {
+      return [...list, {
+        to: currency,
+        from: userCurrency
+      }]
+    })
   }
   return (
     <AppContainer >
@@ -42,6 +64,11 @@ const App = () => {
           userForexList={userForexList}
           forexData={forexData}
           onCardClick={(currencyPair) => onCardClick(currencyPair)}
+          onUserCurrencyChange={(currency) => setUserCurrency(currency)}
+          onAddTargetCurrency={(currency) => {
+            console.log(currency)
+          }}
+          addToUserForexList={(currency) => addToUserForexList(currency)}
         />
       </PageContainer>
     </AppContainer>
