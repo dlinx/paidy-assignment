@@ -61,7 +61,7 @@ export const UserForexList: React.FC<Props> = (props) => {
             isExpanded={i === expandedIndex}
           />)}
       <AddButtonContainer>
-        <Button variant="text" color="primary" size="large" startIcon={<AddIcon />}>Text</Button>
+        <Button variant="text" color="primary" size="large" startIcon={<AddIcon />}>Add Currency</Button>
       </AddButtonContainer>
     </CurrencyListContainer>
   </CurrenciesContainer>
