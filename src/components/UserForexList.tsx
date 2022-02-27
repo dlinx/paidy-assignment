@@ -1,10 +1,11 @@
-import { Card, styled, TextField } from "@material-ui/core";
+import { Button, Card, styled, TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { useState } from "react";
 import { CurrencyCard } from ".";
 import { CURRENCY } from "../constants/currency";
 import { ForexListItem } from "../constants/userPreset";
 import { ForexTick } from "../services/usePriceTick";
+import AddIcon from '@mui/icons-material/Add';
 
 const CurrenciesContainer = styled('div')({
   width: '400px',
@@ -18,6 +19,10 @@ const CurrencyListContainer = styled('div')({
 const ConfigWrapper = styled(Card)({
   display: 'flex',
   padding: '5px'
+});
+const AddButtonContainer = styled('div')({
+  marginTop: '20px',
+  textAlign: 'center'
 })
 type Props = {
   userForexList: ForexListItem[],
@@ -55,6 +60,9 @@ export const UserForexList: React.FC<Props> = (props) => {
             onCardClick={() => onCardClick(currency, i)}
             isExpanded={i === expandedIndex}
           />)}
+      <AddButtonContainer>
+        <Button variant="text" color="primary" size="large" startIcon={<AddIcon />}>Text</Button>
+      </AddButtonContainer>
     </CurrencyListContainer>
   </CurrenciesContainer>
 }

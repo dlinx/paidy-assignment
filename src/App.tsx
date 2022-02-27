@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { CurrencyCard } from './components/CurrencyCard';
 import { usePriceTick } from './services/usePriceTick';
-import { Container, Paper, styled } from '@material-ui/core';
+import { Button, Container, Paper, styled, useMediaQuery, useTheme } from '@material-ui/core';
 import { ForexGraph } from './components';
 import { PRESET_CURRENCY, PRESET_FOREX_LIST } from './constants/userPreset';
 import { UserForexList } from './components/UserForexList';
@@ -24,6 +24,8 @@ const App = () => {
   const [userCurrency, setUserCurrency] = useState(PRESET_CURRENCY)
   const [userForexList, setUserForexList] = useState(PRESET_FOREX_LIST)
   const [selectedCurrencyPair, setSelectedCurrencyPair] = useState('USD_JPY')
+  const theme = useTheme();
+  const isNotMobile = useMediaQuery(theme.breakpoints.up('sm'));
 
   useEffect(() => {
     setCurrencyPairs(['USDJPY']);
@@ -35,7 +37,7 @@ const App = () => {
   return (
     <AppContainer >
       <PageContainer maxWidth="md">
-        <ForexGraph chartData={forexData[selectedCurrencyPair]} />
+        {isNotMobile && <ForexGraph chartData={forexData[selectedCurrencyPair]} />}
         <UserForexList
           userForexList={userForexList}
           forexData={forexData}
