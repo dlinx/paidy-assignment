@@ -57,8 +57,9 @@ export const UserForexList: React.FC<Props> = (props) => {
         }}
         options={Object.keys(CURRENCY)}
         width='130px'
-        defaultValue={PRESET_CURRENCY}
+        defaultValue={props.userCurrency}
         label='Currency'
+        disableClearable
       />
       <TextField label="Amount" value={convertAmount}
         style={{ width: '100%' }}

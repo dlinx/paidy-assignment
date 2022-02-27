@@ -13,6 +13,7 @@ export interface ForexTick {
 export const usePriceTick = () => {
   const [currencyPairs, setCurrencyPairs] = useState<string[]>([]);
   const [forexData, setForexData] = useState<{ [key: string]: ForexTick[] }>({});
+  const [isLoading, setIsLoading] = useState(false)
 
   const addToForexData = (forexTick: ForexTick[]) => {
     setForexData(fData => {
@@ -32,13 +33,15 @@ export const usePriceTick = () => {
     const controller = new AbortController();
     const signal = controller.signal;
     const params = currencyPairs.join('&pair=')
+    setIsLoading(true);
     fetch(`${API_SERVER}${API_URL}?pair=${params}`, {
       headers: {
         token: AUTH_TOKEN
       },
       signal
     }).then(res => {
-      return res.body?.getReader()
+      setIsLoading(false);
+      return res.body?.getReader();
     })
       .then(reader => {
         return new ReadableStream({
@@ -72,6 +75,7 @@ export const usePriceTick = () => {
 
   return {
     forexData,
-    setCurrencyPairs
+    setCurrencyPairs,
+    isLoading
   }
 }

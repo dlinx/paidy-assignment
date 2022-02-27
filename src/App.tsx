@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { CurrencyCard } from './components/CurrencyCard';
 import { usePriceTick } from './services/usePriceTick';
-import { Button, Container, Paper, styled, useMediaQuery, useTheme } from '@material-ui/core';
+import { Button, CircularProgress, Container, Paper, styled, useMediaQuery, useTheme } from '@material-ui/core';
 import { ForexGraph } from './components';
 import { ForexListItem, PRESET_CURRENCY, PRESET_FOREX_LIST } from './constants/userPreset';
 import { UserForexList } from './components/UserForexList';
@@ -14,14 +14,20 @@ const AppContainer = styled('div')({
   bottom: 0,
   right: 0,
   margin: '20px 0'
-})
+});
+const LoadingContainer = styled(Container)({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center'
+});
+
 const PageContainer = styled(Container)({
   height: '100%',
   display: 'flex'
 });
 
 const App = () => {
-  const { forexData, setCurrencyPairs } = usePriceTick();
+  const { forexData, setCurrencyPairs, isLoading } = usePriceTick();
   const [userCurrency, setUserCurrency] = useState(PRESET_CURRENCY)
   const [userForexList, setUserForexList] = useState<ForexListItem[]>([])
   const [selectedCurrencyPair, setSelectedCurrencyPair] = useState(`${PRESET_FOREX_LIST[0]}_${PRESET_CURRENCY}`)
@@ -59,18 +65,24 @@ const App = () => {
   return (
     <AppContainer >
       <PageContainer maxWidth="md">
-        {isNotMobile && <ForexGraph chartData={forexData[selectedCurrencyPair]} />}
-        <UserForexList
-          userForexList={userForexList}
-          forexData={forexData}
-          onCardClick={(currencyPair) => onCardClick(currencyPair)}
-          onUserCurrencyChange={(currency) => setUserCurrency(currency)}
-          onAddTargetCurrency={(currency) => {
-            console.log(currency)
-          }}
-          addToUserForexList={(currency) => addToUserForexList(currency)}
-          userCurrency={userCurrency}
-        />
+        {isLoading ?
+          <LoadingContainer>
+            <CircularProgress color="secondary" />
+          </LoadingContainer>
+          : <>
+            {isNotMobile && <ForexGraph chartData={forexData[selectedCurrencyPair]} />}
+            <UserForexList
+              userForexList={userForexList}
+              forexData={forexData}
+              onCardClick={(currencyPair) => onCardClick(currencyPair)}
+              onUserCurrencyChange={(currency) => setUserCurrency(currency)}
+              onAddTargetCurrency={(currency) => {
+                console.log(currency)
+              }}
+              addToUserForexList={(currency) => addToUserForexList(currency)}
+              userCurrency={userCurrency}
+            />
+          </>}
       </PageContainer>
     </AppContainer>
   );

@@ -11,9 +11,10 @@ type Props = {
     label: string,
     clearOnBlur?: boolean,
     value?: string | null
+    disableClearable?: boolean
 }
 export const CurrencyAutoComplete: React.FC<Props> = ({
-    onUserCurrencyChange, options, width, defaultValue, label, clearOnBlur, value }) => {
+    onUserCurrencyChange, options, width, defaultValue, label, clearOnBlur, value, disableClearable }) => {
     return <Autocomplete
         options={options}
         getOptionLabel={(option) => option}
@@ -26,5 +27,6 @@ export const CurrencyAutoComplete: React.FC<Props> = ({
         }}
         clearOnBlur={clearOnBlur}
         value={value}
+        disableClearable={disableClearable}
     />
 }
