@@ -2,10 +2,10 @@ import { Paper, styled } from "@material-ui/core"
 import { ForexTick } from "../services/usePriceTick"
 import 'chartjs-adapter-moment';
 
-import { Filler, TimeSeriesScale, TimeScale, LineElement, PointElement, CategoryScale, LinearScale, Chart as ChartJS, } from "chart.js";
+import { Filler, TimeSeriesScale, TimeScale, LineElement, PointElement, CategoryScale, LinearScale, Chart as ChartJS, Title } from "chart.js";
 import { Line } from 'react-chartjs-2';
 
-ChartJS.register([Filler, TimeSeriesScale, TimeScale, CategoryScale, LinearScale, PointElement, LineElement]);
+ChartJS.register([Filler, TimeSeriesScale, TimeScale, CategoryScale, LinearScale, PointElement, LineElement, Title]);
 
 type Props = {
   chartData: ForexTick[]
@@ -24,9 +24,6 @@ export const ForexGraph: React.FC<Props> = ({ chartData }) => {
   const options = {
     responsive: true,
     plugins: {
-      legend: {
-        position: 'top' as const,
-      },
       title: {
         display: true,
         text: `${chartData[0].from}/${chartData[0].to}`,
