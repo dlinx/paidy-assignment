@@ -14,6 +14,7 @@ export const usePriceTick = () => {
   const [currencyPairs, setCurrencyPairs] = useState<string[]>([]);
   const [forexData, setForexData] = useState<{ [key: string]: ForexTick[] }>({});
   const [isLoading, setIsLoading] = useState(false)
+  const [hasError, setHasError] = useState(false);
 
   const addToForexData = (forexTick: ForexTick[]) => {
     setForexData(fData => {
@@ -66,6 +67,9 @@ export const usePriceTick = () => {
             }
           }
         });
+      }).catch(e => {
+        console.log(1111, e);
+        setHasError(true);
       });
     return () => {
       console.log('aborted')
@@ -76,6 +80,7 @@ export const usePriceTick = () => {
   return {
     forexData,
     setCurrencyPairs,
-    isLoading
+    isLoading,
+    hasError
   }
 }

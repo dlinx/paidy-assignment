@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { CurrencyCard } from './components/CurrencyCard';
 import { usePriceTick } from './services/usePriceTick';
-import { Button, CircularProgress, Container, Paper, styled, useMediaQuery, useTheme } from '@material-ui/core';
+import { Button, CircularProgress, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Paper, styled, useMediaQuery, useTheme } from '@material-ui/core';
 import { ForexGraph } from './components';
 import { ForexListItem, PRESET_CURRENCY, PRESET_FOREX_LIST } from './constants/userPreset';
 import { UserForexList } from './components/UserForexList';
@@ -27,13 +27,12 @@ const PageContainer = styled(Container)({
 });
 
 const App = () => {
-  const { forexData, setCurrencyPairs, isLoading } = usePriceTick();
+  const { hasError, forexData, setCurrencyPairs, isLoading } = usePriceTick();
   const [userCurrency, setUserCurrency] = useState(PRESET_CURRENCY)
   const [userForexList, setUserForexList] = useState<ForexListItem[]>([])
   const [selectedCurrencyPair, setSelectedCurrencyPair] = useState(`${PRESET_FOREX_LIST[0]}_${PRESET_CURRENCY}`)
   const theme = useTheme();
   const isNotMobile = useMediaQuery(theme.breakpoints.up('sm'));
-
   useEffect(() => {
     const currencyPairs: string[] = userForexList.map(({ to, from }) => `${from}${to}`)
     setCurrencyPairs(currencyPairs);
@@ -65,6 +64,24 @@ const App = () => {
   return (
     <AppContainer >
       <PageContainer maxWidth="md">
+        <Dialog
+          open={hasError}
+          onClose={() => { window.location.href = '/' }}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            Error
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              An Error occured
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => window.location.href = '/'}>Reload</Button>
+          </DialogActions>
+        </Dialog>
         {isLoading ?
           <LoadingContainer>
             <CircularProgress color="secondary" />
