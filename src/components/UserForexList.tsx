@@ -6,6 +6,7 @@ import { ForexListItem, PRESET_CURRENCY } from "../constants/userPreset";
 import { ForexTick } from "../services/usePriceTick";
 import { AddCurrencyButton } from "./AddCurrencyButton";
 import { CurrencyAutoComplete } from "./CurrencyAutocomplete";
+import { ForexToCountry } from "../constants/forexCountryMap"
 
 const CurrenciesContainer = styled('div')({
   width: '400px',
@@ -26,6 +27,7 @@ type Props = {
   forexData: {
     [currencyId: string]: ForexTick[]
   },
+  userCurrency: CURRENCY,
   onCardClick: (currency: string) => void
   onUserCurrencyChange: (currency: CURRENCY) => void
   onAddTargetCurrency: (currency: CURRENCY) => void
@@ -33,10 +35,18 @@ type Props = {
 }
 export const UserForexList: React.FC<Props> = (props) => {
   const [expandedIndex, setExpandedIndex] = useState(0);
+  const [convertAmount, setConvertAmount] = useState(ForexToCountry[props.userCurrency].amount);
 
   const onCardClick = (currency: ForexTick[], i: number) => {
     setExpandedIndex(i);
     props.onCardClick(`${currency[0].to}_${currency[0].from}`)
+  }
+
+  const onConvertAmountChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    let n = Number(e.target.value)
+    if (n < 1) n = 1;
+    if (n < 9999999)
+      setConvertAmount(n)
   }
 
   return <CurrenciesContainer>
@@ -50,7 +60,11 @@ export const UserForexList: React.FC<Props> = (props) => {
         defaultValue={PRESET_CURRENCY}
         label='Currency'
       />
-      <TextField label="Amount" value={1} />
+      <TextField label="Amount" value={convertAmount}
+        style={{ width: '100%' }}
+        onChange={(e) => onConvertAmountChange(e)}
+        inputProps={{ type: 'number' }}
+      />
     </ConfigWrapper>
     <CurrencyListContainer>
       {Object.values(props.forexData)
@@ -60,6 +74,7 @@ export const UserForexList: React.FC<Props> = (props) => {
             forexData={currency[currency.length - 1]}
             onCardClick={() => onCardClick(currency, i)}
             isExpanded={i === expandedIndex}
+            convertAmount={convertAmount}
           />)}
       <AddCurrencyButton
         onCurrencySelected={(currency) => props.addToUserForexList(currency)}

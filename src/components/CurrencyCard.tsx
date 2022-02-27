@@ -7,9 +7,10 @@ type Props = {
   forexData: ForexTick,
   onCardClick: () => void,
   isExpanded?: boolean
+  convertAmount: number
 }
 
-export const CurrencyCard: React.FC<Props> = ({ forexData, onCardClick, isExpanded }) => {
+export const CurrencyCard: React.FC<Props> = ({ forexData, onCardClick, isExpanded, convertAmount }) => {
   const roundNumber = (n: number) => {
     return n.toFixed(3)
   }
@@ -20,19 +21,19 @@ export const CurrencyCard: React.FC<Props> = ({ forexData, onCardClick, isExpand
       <Typography>{forexData.to}</Typography>
     </CardTitleWrapper>
     <Price>
-      {roundNumber(forexData.price)}
+      {(roundNumber(forexData.price * convertAmount))}
     </Price>
     {isExpanded && <TradeSectionWrapper>
       <BuyPriceWrapper>
         <Typography>Buy</Typography>
         <Price>
-          {roundNumber(forexData.ask)}
+          {roundNumber(forexData.ask * convertAmount)}
         </Price>
       </BuyPriceWrapper>
       <PriceWrapper>
         <Typography>Sell</Typography>
         <Price>
-          {roundNumber(forexData.bid)}
+          {roundNumber(forexData.bid * convertAmount)}
         </Price>
       </PriceWrapper>
     </TradeSectionWrapper>}

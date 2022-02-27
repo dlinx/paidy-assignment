@@ -29,7 +29,7 @@ const App = () => {
   const isNotMobile = useMediaQuery(theme.breakpoints.up('sm'));
 
   useEffect(() => {
-    const currencyPairs: string[] = userForexList.map(({to,from})=>`${from}${to}`)
+    const currencyPairs: string[] = userForexList.map(({ to, from }) => `${from}${to}`)
     setCurrencyPairs(currencyPairs);
   }, [userForexList])
 
@@ -69,6 +69,7 @@ const App = () => {
             console.log(currency)
           }}
           addToUserForexList={(currency) => addToUserForexList(currency)}
+          userCurrency={userCurrency}
         />
       </PageContainer>
     </AppContainer>
